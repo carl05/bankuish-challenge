@@ -1,20 +1,15 @@
-package com.challenge.placeholder
+package com.bankuish.challenge.presentation
 
-import java.util.ArrayList
-import java.util.HashMap
+import androidx.lifecycle.ViewModel
+import java.util.*
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- *
- * TODO: Replace all uses of this class before publishing your app.
- */
-object PlaceholderContent {
+class GitHubRepoViewModel : ViewModel(){
 
     /**
      * An array of sample (placeholder) items.
      */
     val ITEMS: MutableList<PlaceholderItem> = ArrayList()
+
 
     /**
      * A map of sample (placeholder) items, by ID.

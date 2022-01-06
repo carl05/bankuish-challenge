@@ -4,6 +4,7 @@
     package="com.bankuish.challenge">
 
     <application
+        android:name=".BankuishApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bankuish">
         <activity
-            android:name=".ReposityDetailActivity"
+            android:name=".presentation.ReposityDetailActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:resizeableActivity="true"

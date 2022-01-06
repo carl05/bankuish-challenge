@@ -1,4 +1,4 @@
-package com.bankuish.challenge
+package com.bankuish.challenge.presentation
 
 import android.content.ClipData
 import android.content.ClipDescription
@@ -13,9 +13,10 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bankuish.challenge.R
 import com.bankuish.challenge.databinding.FragmentRepositoryListBinding
 import com.bankuish.challenge.databinding.RepositoryListContentBinding
-import com.challenge.placeholder.PlaceholderContent
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * A Fragment representing a list of Pings. This fragment
@@ -27,7 +28,8 @@ import com.challenge.placeholder.PlaceholderContent
  */
 
 class ItemListFragment : Fragment() {
-
+    // Lazy Inject ViewModel
+    val gitHubViewModel: GitHubRepoViewModel by viewModel()
     /**
      * Method to intercept global key events in the
      * item list fragment to trigger keyboard shortcuts
@@ -78,7 +80,7 @@ class ItemListFragment : Fragment() {
          * a single pane layout or two pane layout
          */
         val onClickListener = View.OnClickListener { itemView ->
-            val item = itemView.tag as PlaceholderContent.PlaceholderItem
+            val item = itemView.tag as GitHubRepoViewModel.PlaceholderItem
             val bundle = Bundle()
             bundle.putString(
                 ItemDetailFragment.ARG_ITEM_ID,
@@ -94,7 +96,7 @@ class ItemListFragment : Fragment() {
          * experience on larger screen devices
          */
         val onContextClickListener = View.OnContextClickListener { v ->
-            val item = v.tag as PlaceholderContent.PlaceholderItem
+            val item = v.tag as GitHubRepoViewModel.PlaceholderItem
             Toast.makeText(
                 v.context,
                 "Context click of item " + item.id,
@@ -112,14 +114,14 @@ class ItemListFragment : Fragment() {
     ) {
 
         recyclerView.adapter = SimpleItemRecyclerViewAdapter(
-            PlaceholderContent.ITEMS,
+            gitHubViewModel.ITEMS,
             onClickListener,
             onContextClickListener
         )
     }
 
     class SimpleItemRecyclerViewAdapter(
-        private val values: List<PlaceholderContent.PlaceholderItem>,
+        private val values: List<GitHubRepoViewModel.PlaceholderItem>,
         private val onClickListener: View.OnClickListener,
         private val onContextClickListener: View.OnContextClickListener
     ) :
