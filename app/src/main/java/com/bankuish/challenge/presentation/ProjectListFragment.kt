@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bankuish.challenge.R
 import com.bankuish.challenge.databinding.FragmentProjectListBinding
 import com.bankuish.challenge.databinding.ProjectListContentBinding
 import com.bankuish.challenge.domain.GitHubProject
@@ -82,28 +84,15 @@ class ProjectListFragment : Fragment() {
             val item = projectList[position]
             holder.nameTextView.text = item.name
             holder.authosTextView.text = item?.owner?.login
-//            with(holder.itemView) {
-//                tag = item
-//                setOnClickListener {}
-
-//                setOnLongClickListener { v ->
-//                    // Setting the item id as the clip data so that the drop target is able to
-//                    // identify the id of the content
-//                    val clipItem = ClipData.Item(item.name)
-//                    val dragData = ClipData(
-//                        v.tag as? CharSequence,
-//                        arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
-//                        clipItem
-//                    )
-//
-//                    v.startDragAndDrop(
-//                        dragData,
-//                        View.DragShadowBuilder(v),
-//                        null,
-//                        0
-//                    )
-//                }
-//            }
+            val onClickListener = View.OnClickListener { itemView ->
+                val bundle = Bundle()
+                bundle.putParcelable(
+                    ProjectDetailFragment.PROJECT_ITEM,
+                    projectList[position]
+                )
+                itemView.findNavController().navigate(R.id.show_item_detail, bundle)
+            }
+            holder.itemView.setOnClickListener(onClickListener)
         }
 
         fun addProjectList(itens: List<GitHubProject>) {

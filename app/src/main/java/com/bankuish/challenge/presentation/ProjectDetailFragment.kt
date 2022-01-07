@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.bankuish.challenge.databinding.FragmentProjectDetailBinding
+import com.bankuish.challenge.domain.GitHubProject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -23,38 +24,21 @@ class ProjectDetailFragment : Fragment() {
     /**
      * The placeholder content this fragment is presenting.
      */
-//    private var item: GitHubProjectViewModel.PlaceholderItem? = null
-    val gitHubViewModel: GitHubProjectViewModel by viewModel()
+    private var project: GitHubProject? = null
     lateinit var itemDetailTextView: TextView
-    private var toolbarLayout: CollapsingToolbarLayout? = null
-
     private var _binding: FragmentProjectDetailBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    private val dragListener = View.OnDragListener { _, event ->
-        if (event.action == DragEvent.ACTION_DROP) {
-            val clipDataItem: ClipData.Item = event.clipData.getItemAt(0)
-            val dragData = clipDataItem.text
-//            item = gitHubViewModel.ITEM_MAP[dragData]
-            updateContent()
-        }
-        true
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            if (it.containsKey(ARG_ITEM_ID)) {
-                // Load the placeholder content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
-//                item = gitHubViewModel.ITEM_MAP[it.getString(ARG_ITEM_ID)]
+            if (it.containsKey(PROJECT_ITEM)) {
+                project = it.getParcelable(PROJECT_ITEM) as GitHubProject?
             }
         }
+
     }
 
     override fun onCreateView(
@@ -65,18 +49,17 @@ class ProjectDetailFragment : Fragment() {
         _binding = FragmentProjectDetailBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
-        toolbarLayout = binding.toolbarLayout
         itemDetailTextView = binding.itemDetail
 
         updateContent()
-        rootView.setOnDragListener(dragListener)
 
         return rootView
     }
 
     private fun updateContent() {
-//        toolbarLayout?.title = item?.content
-
+        binding.itemDetail.text = project?.description
+        binding.detailToolbar.title = project?.name
+        binding.detailToolbar.subtitle = project?.owner?.login
         // Show the placeholder content as text in a TextView.
 //        item?.let {
 //            itemDetailTextView.text = it.details
@@ -84,11 +67,7 @@ class ProjectDetailFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * The fragment argument representing the item ID that this fragment
-         * represents.
-         */
-        const val ARG_ITEM_ID = "item_id"
+        const val PROJECT_ITEM = "project_item"
     }
 
     override fun onDestroyView() {

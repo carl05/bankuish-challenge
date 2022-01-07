@@ -1,5 +1,9 @@
 package com.bankuish.challenge.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class GitHubProject(
     val allow_forking: Boolean? = false,
     val archive_url: String? = "",
@@ -22,8 +26,9 @@ data class GitHubProject(
     val watchers: Int? = 0,
     val watchers_count: Int? = 0,
     val owner: GitHubOwner? = GitHubOwner()
-)
+): Parcelable
 
+@Parcelize
 data class GitHubOwner(
     val avatar_url: String? = "",
     val gravatar_id: String? = "",
@@ -32,5 +37,5 @@ data class GitHubOwner(
     val repos_url: String? = "",
     val type: String? = "",
     val url: String? = ""
-)
+): Parcelable
 
