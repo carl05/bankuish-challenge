@@ -4,7 +4,6 @@ import retrofit2.http.Query
 
 class GitHubProjectProjectRepository(private val retrofitService: GitHubService) :
     IGitHubProjectRepository {
-    //    ?q=kotlin&per_page=20&page=1
     override suspend fun getKotlinRepositories(
         language: String,
         resultsPerPage: String,
