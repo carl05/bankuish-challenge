@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">bankuish</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="project_name">Project Name:</string>
+    <string name="author">Author:</string>
+    <string name="project_full_name">ProjectName</string>
 </resources>

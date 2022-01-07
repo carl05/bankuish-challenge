@@ -1,4 +1,4 @@
-package com.bankuish.challenge
+package com.bankuish.challenge.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,16 +7,17 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.bankuish.challenge.databinding.ActivityRepositoryDetailBinding
+import com.bankuish.challenge.R
+import com.bankuish.challenge.databinding.ActivityProjectDetailBinding
 
-class ReposityDetailActivity : AppCompatActivity() {
+class ProjectDetailActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityRepositoryDetailBinding.inflate(layoutInflater)
+        val binding = ActivityProjectDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment =
