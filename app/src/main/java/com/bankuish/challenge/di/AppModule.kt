@@ -1,8 +1,9 @@
 package com.bankuish.challenge.di
 
-import com.bankuish.challenge.data.GitHubProjectRepository
+import com.bankuish.challenge.data.GitHubProjectProjectRepository
 import com.bankuish.challenge.data.GitHubService
-import com.bankuish.challenge.data.IGitHubRepository
+import com.bankuish.challenge.data.IGitHubProjectRepository
+import com.bankuish.challenge.domain.GitHubProjectUseCase
 import com.bankuish.challenge.presentation.GitHubProjectViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -13,7 +14,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 @JvmField
 val appModule = module {
     // single instance of HelloRepository
-    single<IGitHubRepository> { GitHubProjectRepository(get()) }
+    single<IGitHubProjectRepository> { GitHubProjectProjectRepository(get()) }
+    single { GitHubProjectUseCase(get()) }
     single { getServiceInstance() }
 
     // Simple Presenter Factory

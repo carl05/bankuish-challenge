@@ -3,12 +3,13 @@ package com.bankuish.challenge.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bankuish.challenge.data.GitHubProjectResponse
-import com.bankuish.challenge.data.IGitHubRepository
-import kotlinx.coroutines.*
-import java.util.*
+import com.bankuish.challenge.domain.GitHubProject
+import com.bankuish.challenge.domain.GitHubProjectUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class GitHubProjectViewModel(private val repository: IGitHubRepository) : ViewModel(){
+class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) : ViewModel(){
 
 //    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
 //        onError("Exception handled: ${throwable.localizedMessage}")
@@ -19,11 +20,11 @@ class GitHubProjectViewModel(private val repository: IGitHubRepository) : ViewMo
         errorMessage.postValue(message)
         loading.postValue(false)
     }
-    val projectList = MutableLiveData<GitHubProjectResponse>()
+    val projectList = MutableLiveData<List<GitHubProject>>()
 
      fun getKotlinRepos() {
          viewModelScope.launch {
-            val response = repository.getKotlinRepositories()
+            val response = projectUseCase.getKotlinProjects()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     projectList.postValue(response.body())

@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.bankuish.challenge.data.Item
 import com.bankuish.challenge.databinding.FragmentProjectListBinding
 import com.bankuish.challenge.databinding.ProjectListContentBinding
+import com.bankuish.challenge.domain.GitHubProject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -49,13 +49,13 @@ class ProjectListFragment : Fragment() {
     private fun setupRecyclerView(
         recyclerView: RecyclerView
     ) {
-        var list = ArrayList<Item>()
+        val list = ArrayList<GitHubProject>()
         gitHubViewModel.projectList.value?.let {
-            list.addAll(it.items)
+            list.addAll(it)
         }
         recyclerView.adapter = SimpleItemRecyclerViewAdapter()
         gitHubViewModel.projectList.observe(viewLifecycleOwner, {
-            (recyclerView.adapter as? SimpleItemRecyclerViewAdapter)?.addProjectList(it.items)
+            (recyclerView.adapter as? SimpleItemRecyclerViewAdapter)?.addProjectList(it)
         })
 
         gitHubViewModel.getKotlinRepos()
@@ -65,7 +65,7 @@ class ProjectListFragment : Fragment() {
     class SimpleItemRecyclerViewAdapter(
     ) :
         RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
-        var projectList = mutableListOf<Item>()
+        var projectList = mutableListOf<GitHubProject>()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
             val binding =
@@ -81,7 +81,7 @@ class ProjectListFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = projectList[position]
             holder.nameTextView.text = item.name
-            holder.authosTextView.text = item.owner.login
+            holder.authosTextView.text = item?.owner?.login
 //            with(holder.itemView) {
 //                tag = item
 //                setOnClickListener {}
@@ -106,7 +106,7 @@ class ProjectListFragment : Fragment() {
 //            }
         }
 
-        fun addProjectList(itens: List<Item>) {
+        fun addProjectList(itens: List<GitHubProject>) {
             this.projectList = itens.toMutableList()
             notifyDataSetChanged()
         }
