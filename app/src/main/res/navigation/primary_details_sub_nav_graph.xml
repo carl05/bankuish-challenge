@@ -6,9 +6,9 @@
     app:startDestination="@id/fragment_item_detail">
     <fragment
         android:id="@+id/fragment_item_detail"
-        android:name="com.bankuish.challenge.presentation.ItemDetailFragment"
+        android:name="com.bankuish.challenge.presentation.ProjectDetailFragment"
         android:label="@string/title_item_detail"
-        tools:layout="@layout/fragment_repository_detail">
+        tools:layout="@layout/fragment_project_detail">
         <argument
             android:name="item_id"
             android:defaultValue=""

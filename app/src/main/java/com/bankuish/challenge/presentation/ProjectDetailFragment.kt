@@ -9,26 +9,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.bankuish.challenge.databinding.FragmentRepositoryDetailBinding
+import com.bankuish.challenge.databinding.FragmentProjectDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * A fragment representing a single Item detail screen.
- * This fragment is either contained in a [ItemListFragment]
+ * This fragment is either contained in a [ProjectListFragment]
  * in two-pane mode (on larger screen devices) or self-contained
  * on handsets.
  */
-class ItemDetailFragment : Fragment() {
+class ProjectDetailFragment : Fragment() {
 
     /**
      * The placeholder content this fragment is presenting.
      */
-    private var item: GitHubRepoViewModel.PlaceholderItem? = null
-    val gitHubViewModel: GitHubRepoViewModel by viewModel()
+//    private var item: GitHubProjectViewModel.PlaceholderItem? = null
+    val gitHubViewModel: GitHubProjectViewModel by viewModel()
     lateinit var itemDetailTextView: TextView
     private var toolbarLayout: CollapsingToolbarLayout? = null
 
-    private var _binding: FragmentRepositoryDetailBinding? = null
+    private var _binding: FragmentProjectDetailBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -38,7 +38,7 @@ class ItemDetailFragment : Fragment() {
         if (event.action == DragEvent.ACTION_DROP) {
             val clipDataItem: ClipData.Item = event.clipData.getItemAt(0)
             val dragData = clipDataItem.text
-            item = gitHubViewModel.ITEM_MAP[dragData]
+//            item = gitHubViewModel.ITEM_MAP[dragData]
             updateContent()
         }
         true
@@ -52,7 +52,7 @@ class ItemDetailFragment : Fragment() {
                 // Load the placeholder content specified by the fragment
                 // arguments. In a real-world scenario, use a Loader
                 // to load content from a content provider.
-                item = gitHubViewModel.ITEM_MAP[it.getString(ARG_ITEM_ID)]
+//                item = gitHubViewModel.ITEM_MAP[it.getString(ARG_ITEM_ID)]
             }
         }
     }
@@ -62,7 +62,7 @@ class ItemDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentRepositoryDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentProjectDetailBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
         toolbarLayout = binding.toolbarLayout
@@ -75,12 +75,12 @@ class ItemDetailFragment : Fragment() {
     }
 
     private fun updateContent() {
-        toolbarLayout?.title = item?.content
+//        toolbarLayout?.title = item?.content
 
         // Show the placeholder content as text in a TextView.
-        item?.let {
-            itemDetailTextView.text = it.details
-        }
+//        item?.let {
+//            itemDetailTextView.text = it.details
+//        }
     }
 
     companion object {
