@@ -23,7 +23,7 @@ fun Item.map(): GitHubProject {
         stargazers_url = this.stargazers_url,
         topics = this.topics,
         updated_at = this.updated_at,
-        url = this.url,
+        url = this.html_url,
         watchers = this.watchers,
         watchers_count = this.watchers_count,
         owner = this.owner.map()
@@ -46,6 +46,6 @@ fun Owner.map(): GitHubOwner{
         login = this.login,
         repos_url = this.repos_url,
         type = this.type,
-        url = this.url
+        url = this.html_url
     )
 }

@@ -83,7 +83,7 @@ class ProjectListFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = projectList[position]
             holder.nameTextView.text = item.name
-            holder.authosTextView.text = item?.owner?.login
+            holder.authosTextView.text = item.owner?.login
             val onClickListener = View.OnClickListener { itemView ->
                 val bundle = Bundle()
                 bundle.putParcelable(
