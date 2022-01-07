@@ -1,6 +1,6 @@
 package com.bankuish.challenge.di
 
-import com.bankuish.challenge.data.GitHubProjectProjectRepository
+import com.bankuish.challenge.data.GitHubProjectRepository
 import com.bankuish.challenge.data.GitHubService
 import com.bankuish.challenge.data.IGitHubProjectRepository
 import com.bankuish.challenge.domain.GitHubProjectUseCase
@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 @JvmField
 val appModule = module {
     // single instance of HelloRepository
-    single<IGitHubProjectRepository> { GitHubProjectProjectRepository(get()) }
+    single<IGitHubProjectRepository> { GitHubProjectRepository(get()) }
     single { GitHubProjectUseCase(get()) }
     single { getServiceInstance() }
 

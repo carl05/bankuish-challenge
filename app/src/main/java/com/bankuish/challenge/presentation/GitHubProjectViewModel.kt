@@ -9,11 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) : ViewModel(){
+ class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) : ViewModel(){
 
-//    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-//        onError("Exception handled: ${throwable.localizedMessage}")
-//    }
     val loading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
     private fun onError(message: String) {
@@ -36,14 +33,4 @@ class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) :
         }
 
     }
-
-    private fun makeDetails(position: Int): String {
-        val builder = StringBuilder()
-        builder.append("Details about Item: ").append(position)
-        for (i in 0..position - 1) {
-            builder.append("\nMore details information here.")
-        }
-        return builder.toString()
-    }
-
 }
