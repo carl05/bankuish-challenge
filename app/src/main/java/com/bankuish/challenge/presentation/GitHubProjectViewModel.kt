@@ -5,25 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bankuish.challenge.domain.GitHubProject
 import com.bankuish.challenge.domain.GitHubProjectUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) : ViewModel() {
+class GitHubProjectViewModel(private val gitHubProjectUseCase: GitHubProjectUseCase) : ViewModel() {
     private val delayTimeMillis: Long = 1000
     val gitHubLiveData = MutableLiveData<GithubProjectUIState>()
 
     fun getKotlinRepos(isRefreshing: Boolean) {
         gitHubLiveData.postValue(GithubProjectUIState.Loading)
         viewModelScope.launch {
-            val response = projectUseCase.getKotlinProjects(isRefreshing)
+            val githubProjectUIState = gitHubProjectUseCase.getKotlinProjects(isRefreshing)
             delay(delayTimeMillis)
-            if (response.isSuccessful) {
-                gitHubLiveData.postValue(GithubProjectUIState.Success(response.body()))
-            } else {
-                gitHubLiveData.postValue(GithubProjectUIState.Error)
-            }
+            gitHubLiveData.postValue(githubProjectUIState)
         }
 
     }

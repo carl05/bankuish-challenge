@@ -37,6 +37,11 @@ class ProjectListFragment : Fragment() {
         val swipeContainer = binding.swipeRefresh
         swipeContainer.setOnRefreshListener {
             requireActivity().runOnUiThread {
+                val recyclerView: RecyclerView = binding.itemList
+                val adapter = recyclerView.adapter as? GitHubProjectAdapter
+                if (recyclerView.adapter != null) {
+                    adapter?.clear()
+                }
                 gitHubViewModel.getKotlinRepos(true)
             }
         }
@@ -75,6 +80,14 @@ class ProjectListFragment : Fragment() {
         }
         adapter?.addProjectList(projectList)
         recyclerView.adapter = adapter
+        showContentWhenNError()
+    }
+
+    private fun showContentWhenNError() {
+        val viewSwitcher = binding.viewSwitcher
+        if (viewSwitcher.currentView == binding.errorView) {
+            viewSwitcher.showNext()
+        }
     }
 
     private fun showError() {
@@ -86,6 +99,7 @@ class ProjectListFragment : Fragment() {
     }
 
     private fun showLoading() {
+        showContentWhenNError()
         binding.swipeRefresh.isRefreshing = true
     }
 
