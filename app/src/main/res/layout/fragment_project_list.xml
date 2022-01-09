@@ -1,55 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Adding the same root's ID for view binding as other layout configurations -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_list_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ViewSwitcher
+        android:id="@+id/viewSwitcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-
-
-
-        <ViewSwitcher
-            android:id="@+id/viewSwitcher"
-            android:layout_width="wrap_content"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/item_list"
-                android:name="com.bankuish.ItemListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:layoutManager="LinearLayoutManager"
-                tools:context="com.challenge.com.challenge.ReposityDetailActivity"
                 tools:listitem="@layout/project_list_content" />
 
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-            <TextView
-                android:id="@+id/errorView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/oops_we_got_a_problem"
-                android:textAlignment="center"
-                android:textSize="40sp">
+        <TextView
+            android:id="@+id/errorView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/oops_we_got_a_problem"
+            android:textAlignment="center"
+            android:textSize="40sp">
 
-            </TextView>
+        </TextView>
 
-        </ViewSwitcher>
+    </ViewSwitcher>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,13 +5,12 @@ import retrofit2.Response
 
  class GitHubProjectRepository(private val retrofitService: GitHubService) :
     IGitHubProjectRepository {
-    override fun getKotlinRepositories(
+    override suspend fun getKotlinRepositories(
         language: String,
         resultsPerPage: String,
         pageNumber: String
     ): Response<GitHubProjectResponse> {
-        return runBlocking {
-            retrofitService.getGithubProjects(language, resultsPerPage, pageNumber)
-        }
+        return retrofitService.getGithubProjects(language, resultsPerPage, pageNumber)
+
     }
 }

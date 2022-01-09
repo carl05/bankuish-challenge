@@ -11,20 +11,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) : ViewModel() {
-    private val delayTimeMillis: Long = 3000
-    val gitHubLiveDate = MutableLiveData<GithubProjectUIState>()
+    private val delayTimeMillis: Long = 1000
+    val gitHubLiveData = MutableLiveData<GithubProjectUIState>()
 
-    fun getKotlinRepos() {
-        gitHubLiveDate.postValue(GithubProjectUIState.Loading)
+    fun getKotlinRepos(isRefreshing: Boolean) {
+        gitHubLiveData.postValue(GithubProjectUIState.Loading)
         viewModelScope.launch {
-            val response = projectUseCase.getKotlinProjects()
-            withContext(Dispatchers.Main) {
-                delay(delayTimeMillis)
-                if (response.isSuccessful) {
-                    gitHubLiveDate.postValue(GithubProjectUIState.Success(response.body()))
-                } else {
-                    gitHubLiveDate.postValue(GithubProjectUIState.Error)
-                }
+            val response = projectUseCase.getKotlinProjects(isRefreshing)
+            delay(delayTimeMillis)
+            if (response.isSuccessful) {
+                gitHubLiveData.postValue(GithubProjectUIState.Success(response.body()))
+            } else {
+                gitHubLiveData.postValue(GithubProjectUIState.Error)
             }
         }
 
@@ -33,6 +31,7 @@ class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) :
     sealed class GithubProjectUIState {
         object Loading : GithubProjectUIState()
         object Error : GithubProjectUIState()
-        data class Success(val projectList: List<GitHubProject> ?= emptyList()) : GithubProjectUIState()
+        data class Success(val projectList: List<GitHubProject>? = emptyList()) :
+            GithubProjectUIState()
     }
 }

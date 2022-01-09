@@ -6,19 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bankuish.challenge.R
 import com.bankuish.challenge.databinding.FragmentProjectListBinding
 import com.bankuish.challenge.domain.GitHubProject
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProjectListFragment : Fragment() {
-    // Lazy Inject ViewModel
-    val gitHubViewModel: GitHubProjectViewModel by viewModel()
+    private val gitHubViewModel: GitHubProjectViewModel by viewModel()
 
 
     private var _binding: FragmentProjectListBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -31,50 +31,51 @@ class ProjectListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView: RecyclerView = binding.itemList
-        setupRecyclerView(recyclerView)
+        setupSwipeRefresh()
+        updatePageContent()
+    }
+
+    private fun setupSwipeRefresh() {
         val swipeContainer = binding.swipeRefresh
-        // Setup refresh listener which triggers new data loading
-
         swipeContainer.setOnRefreshListener {
-            // Your code to refresh the list here.
-            // Make sure you call swipeContainer.setRefreshing(false)
-            // once the network request has completed successfully.
-            gitHubViewModel.getKotlinRepos()
+            requireActivity().runOnUiThread {
+                gitHubViewModel.getKotlinRepos(true)
+            }
         }
+        swipeContainer.setColorSchemeResources(
+            R.color.purple_200,
+            R.color.purple_500,
+            R.color.purple_700
+        )
 
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light);
     }
 
 
-
-    private fun setupRecyclerView(
-        recyclerView: RecyclerView
-    ) {
-        recyclerView.adapter = GitHubProjectAdapter()
-        gitHubViewModel.gitHubLiveDate.observe(viewLifecycleOwner) { githubProjectUIState ->
+    private fun updatePageContent() {
+        gitHubViewModel.gitHubLiveData.observe(viewLifecycleOwner) { githubProjectUIState ->
             when (githubProjectUIState) {
                 GitHubProjectViewModel.GithubProjectUIState.Loading -> showLoading()
                 GitHubProjectViewModel.GithubProjectUIState.Error -> showError()
-                is GitHubProjectViewModel.GithubProjectUIState.Success -> showProjectList(
-                    githubProjectUIState.projectList
-                )
+                is GitHubProjectViewModel.GithubProjectUIState.Success -> githubProjectUIState.projectList?.let {
+                    showProjectList(
+                        it
+                    )
+                }
             }
         }
-        gitHubViewModel.getKotlinRepos()
+        gitHubViewModel.getKotlinRepos(false)
     }
 
-    private fun showProjectList(projectList: List<GitHubProject>?) {
+    private fun showProjectList(projectList: List<GitHubProject>) {
         binding.swipeRefresh.isRefreshing = false
         val recyclerView: RecyclerView = binding.itemList
-        val adapter = GitHubProjectAdapter()
-        if (projectList != null) {
-            adapter.addProjectList(projectList)
+        var adapter = recyclerView.adapter as? GitHubProjectAdapter
+        if (recyclerView.adapter == null) {
+            adapter = GitHubProjectAdapter()
+        } else {
+            adapter?.clear()
         }
+        adapter?.addProjectList(projectList)
         recyclerView.adapter = adapter
     }
 

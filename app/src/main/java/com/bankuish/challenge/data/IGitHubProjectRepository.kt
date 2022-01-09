@@ -4,7 +4,7 @@ import retrofit2.Response
 
 interface IGitHubProjectRepository{
 
-    fun getKotlinRepositories(language: String,
-                              resultsPerPage: String,
-                              pageNumber: String): Response<GitHubProjectResponse>
+    suspend fun getKotlinRepositories(language: String,
+                                      resultsPerPage: String,
+                                      pageNumber: String): Response<GitHubProjectResponse>
 }
