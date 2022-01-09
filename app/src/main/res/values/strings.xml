@@ -4,4 +4,5 @@
     <string name="project_name">Project Name:</string>
     <string name="author">Author:</string>
     <string name="project_full_name">ProjectName</string>
+    <string name="oops_we_got_a_problem">Oops we got a problem....</string>
 </resources>
