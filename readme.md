@@ -19,11 +19,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-
-<img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/list.jpeg" width="200">
+<p float="left">
+ <img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/list.jpeg" width="200">
 <img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/detail.jpeg" width="200">
 <img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/error.jpeg" width="200">
 <img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/loading.jpeg" width="200">
+</p>
+
 
 
 ### Built With
