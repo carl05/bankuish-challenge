@@ -14,8 +14,7 @@
             app:destination="@id/item_detail_fragment">
             <argument
                 android:name="project"
-                app:argType="com.bankuish.challenge.domain.GitHubProject"
-                />
+                app:argType="com.bankuish.challenge.domain.GitHubProject" />
         </action>
     </fragment>
     <fragment
@@ -23,9 +22,9 @@
         android:name="com.bankuish.challenge.presentation.ProjectDetailFragment"
         android:label="Project Detail"
         tools:layout="@layout/fragment_project_detail">
-        <argument
-            android:name="item_id"
-            android:defaultValue=""
-            app:argType="string" />
+        <action
+            android:id="@+id/action_detail_to_list"
+            app:destination="@id/item_list_fragment"
+            />
     </fragment>
 </navigation>
