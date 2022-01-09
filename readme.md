@@ -30,9 +30,9 @@
 
 ### Built With
 
-* [Kotlin](https://nextjs.org/)
-* [Android](https://reactjs.org/)
-* [Android Studio](https://vuejs.org/)
+* [Kotlin](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/)
+* [Android](https://www.android.com/intl/pt-BR_br/)
+* [Android Studio](https://developer.android.com/studio)
 
 
 
