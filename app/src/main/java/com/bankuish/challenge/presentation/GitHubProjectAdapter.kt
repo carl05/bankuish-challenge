@@ -44,6 +44,10 @@ class GitHubProjectAdapter : RecyclerView.Adapter<GitHubProjectAdapter.ViewHolde
         this.projectList = itens.toMutableList()
         notifyDataSetChanged()
     }
+    fun clear() {
+        projectList.clear()
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount() = projectList.size
 

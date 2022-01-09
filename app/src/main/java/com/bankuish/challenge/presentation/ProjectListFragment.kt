@@ -1,17 +1,12 @@
 package com.bankuish.challenge.presentation
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.bankuish.challenge.R
 import com.bankuish.challenge.databinding.FragmentProjectListBinding
-import com.bankuish.challenge.databinding.ProjectListContentBinding
 import com.bankuish.challenge.domain.GitHubProject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -38,7 +33,24 @@ class ProjectListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView: RecyclerView = binding.itemList
         setupRecyclerView(recyclerView)
+        val swipeContainer = binding.swipeRefresh
+        // Setup refresh listener which triggers new data loading
+
+        swipeContainer.setOnRefreshListener {
+            // Your code to refresh the list here.
+            // Make sure you call swipeContainer.setRefreshing(false)
+            // once the network request has completed successfully.
+            gitHubViewModel.getKotlinRepos()
+        }
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light);
     }
+
+
 
     private fun setupRecyclerView(
         recyclerView: RecyclerView
@@ -57,7 +69,7 @@ class ProjectListFragment : Fragment() {
     }
 
     private fun showProjectList(projectList: List<GitHubProject>?) {
-        binding.progressBarCyclic.visibility = View.GONE
+        binding.swipeRefresh.isRefreshing = false
         val recyclerView: RecyclerView = binding.itemList
         val adapter = GitHubProjectAdapter()
         if (projectList != null) {
@@ -67,7 +79,7 @@ class ProjectListFragment : Fragment() {
     }
 
     private fun showError() {
-        binding.progressBarCyclic.visibility = View.GONE
+        binding.swipeRefresh.isRefreshing = false
         val viewSwitcher = binding.viewSwitcher
         if (viewSwitcher.currentView == binding.itemList) {
             viewSwitcher.showNext()
@@ -75,7 +87,7 @@ class ProjectListFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding.progressBarCyclic.visibility = View.VISIBLE
+        binding.swipeRefresh.isRefreshing = true
     }
 
 
