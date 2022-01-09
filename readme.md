@@ -19,12 +19,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![detail][detail]
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email`, `email_client`, `project_title`, `project_description`
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
+<img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/list.jpeg" width="200">
+<img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/detail.jpeg" width="200">
+<img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/error.jpeg" width="200">
+<img src="https://github.com/carl05/bankuish-challenge/blob/developer/images/loading.jpeg" width="200">
 
 
 ### Built With
@@ -78,7 +77,4 @@ Project Link: [bankuish-challenge](https://github.com/carl05/bankuish-challenge)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[detail]: https://github.com/carl05/bankuish-challenge/blob/developer/images/detail.jpeg
-[list]: https://github.com/carl05/bankuish-challenge/blob/developer/images/list.jpeg
-[error]: https://github.com/carl05/bankuish-challenge/blob/developer/images/error.jpeg
-[loading]: https://github.com/carl05/bankuish-challenge/blob/developer/images/loading.jpeg
+
