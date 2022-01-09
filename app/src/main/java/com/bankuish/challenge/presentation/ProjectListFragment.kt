@@ -4,34 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bankuish.challenge.R
 import com.bankuish.challenge.databinding.FragmentProjectListBinding
-import com.bankuish.challenge.databinding.ProjectListContentBinding
 import com.bankuish.challenge.domain.GitHubProject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * A Fragment representing a list of Pings. This fragment
- * has different presentations for handset and larger screen devices. On
- * handsets, the fragment presents a list of items, which when touched,
- * lead to a {@link ItemDetailFragment} representing
- * item details. On larger screens, the Navigation controller presents the list of items and
- * item details side-by-side using two vertical panes.
- */
-
 class ProjectListFragment : Fragment() {
-    // Lazy Inject ViewModel
-    val gitHubViewModel: GitHubProjectViewModel by viewModel()
+    private val gitHubViewModel: GitHubProjectViewModel by viewModel()
 
 
     private var _binding: FragmentProjectListBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -44,71 +29,80 @@ class ProjectListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView: RecyclerView = binding.itemList
-        setupRecyclerView(recyclerView)
+        setupSwipeRefresh()
+        updatePageContent()
     }
 
-    private fun setupRecyclerView(
-        recyclerView: RecyclerView
-    ) {
-        val list = ArrayList<GitHubProject>()
-        gitHubViewModel.projectList.value?.let {
-            list.addAll(it)
-        }
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter()
-        gitHubViewModel.projectList.observe(viewLifecycleOwner, {
-            (recyclerView.adapter as? SimpleItemRecyclerViewAdapter)?.addProjectList(it)
-        })
-
-        gitHubViewModel.getKotlinRepos()
-    }
-
-
-    class SimpleItemRecyclerViewAdapter(
-    ) :
-        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
-        var projectList = mutableListOf<GitHubProject>()
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-            val binding =
-                ProjectListContentBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            return ViewHolder(binding)
-
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = projectList[position]
-            holder.nameTextView.text = item.name
-            holder.authosTextView.text = item.owner?.login
-            val onClickListener = View.OnClickListener { itemView ->
-                val bundle = Bundle()
-                bundle.putParcelable(
-                    ProjectDetailFragment.PROJECT_ITEM,
-                    projectList[position]
-                )
-                itemView.findNavController().navigate(R.id.show_item_detail, bundle)
+    private fun setupSwipeRefresh() {
+        val swipeContainer = binding.swipeRefresh
+        swipeContainer.setOnRefreshListener {
+            requireActivity().runOnUiThread {
+                val recyclerView: RecyclerView = binding.itemList
+                val adapter = recyclerView.adapter as? GitHubProjectAdapter
+                if (recyclerView.adapter != null) {
+                    adapter?.clear()
+                }
+                gitHubViewModel.getKotlinRepos(true)
             }
-            holder.itemView.setOnClickListener(onClickListener)
         }
-
-        fun addProjectList(itens: List<GitHubProject>) {
-            this.projectList = itens.toMutableList()
-            notifyDataSetChanged()
-        }
-
-        override fun getItemCount() = projectList.size
-
-        inner class ViewHolder(binding: ProjectListContentBinding) :
-            RecyclerView.ViewHolder(binding.root) {
-            val nameTextView: TextView = binding.txtNameValue
-            val authosTextView: TextView = binding.txtAuthorValue
-        }
+        swipeContainer.setColorSchemeResources(
+            R.color.purple_200,
+            R.color.purple_500,
+            R.color.purple_700
+        )
 
     }
+
+
+    private fun updatePageContent() {
+        gitHubViewModel.gitHubLiveData.observe(viewLifecycleOwner) { githubProjectUIState ->
+            when (githubProjectUIState) {
+                GitHubProjectViewModel.GithubProjectUIState.Loading -> showLoading()
+                GitHubProjectViewModel.GithubProjectUIState.Error -> showError()
+                is GitHubProjectViewModel.GithubProjectUIState.Success -> githubProjectUIState.projectList?.let {
+                    showProjectList(
+                        it
+                    )
+                }
+            }
+        }
+        gitHubViewModel.getKotlinRepos(false)
+    }
+
+    private fun showProjectList(projectList: List<GitHubProject>) {
+        binding.swipeRefresh.isRefreshing = false
+        val recyclerView: RecyclerView = binding.itemList
+        var adapter = recyclerView.adapter as? GitHubProjectAdapter
+        if (recyclerView.adapter == null) {
+            adapter = GitHubProjectAdapter()
+        } else {
+            adapter?.clear()
+        }
+        adapter?.addProjectList(projectList)
+        recyclerView.adapter = adapter
+        showContentWhenNError()
+    }
+
+    private fun showContentWhenNError() {
+        val viewSwitcher = binding.viewSwitcher
+        if (viewSwitcher.currentView == binding.errorView) {
+            viewSwitcher.showNext()
+        }
+    }
+
+    private fun showError() {
+        binding.swipeRefresh.isRefreshing = false
+        val viewSwitcher = binding.viewSwitcher
+        if (viewSwitcher.currentView == binding.itemList) {
+            viewSwitcher.showNext()
+        }
+    }
+
+    private fun showLoading() {
+        showContentWhenNError()
+        binding.swipeRefresh.isRefreshing = true
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

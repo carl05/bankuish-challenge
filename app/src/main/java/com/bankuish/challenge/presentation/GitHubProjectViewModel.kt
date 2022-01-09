@@ -5,32 +5,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bankuish.challenge.domain.GitHubProject
 import com.bankuish.challenge.domain.GitHubProjectUseCase
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
- class GitHubProjectViewModel(private val projectUseCase: GitHubProjectUseCase) : ViewModel(){
+class GitHubProjectViewModel(private val gitHubProjectUseCase: GitHubProjectUseCase) : ViewModel() {
+    private val delayTimeMillis: Long = 1000
+    val gitHubLiveData = MutableLiveData<GithubProjectUIState>()
 
-    val loading = MutableLiveData<Boolean>()
-    val errorMessage = MutableLiveData<String>()
-    private fun onError(message: String) {
-        errorMessage.postValue(message)
-        loading.postValue(false)
-    }
-    val projectList = MutableLiveData<List<GitHubProject>>()
-
-     fun getKotlinRepos() {
-         viewModelScope.launch {
-            val response = projectUseCase.getKotlinProjects()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    projectList.postValue(response.body())
-                    loading.postValue(false)
-                } else {
-                    onError("Error : ${response.message()} ")
-                }
-            }
+    fun getKotlinRepos(isRefreshing: Boolean) {
+        gitHubLiveData.postValue(GithubProjectUIState.Loading)
+        viewModelScope.launch {
+            val githubProjectUIState = gitHubProjectUseCase.getKotlinProjects(isRefreshing)
+            delay(delayTimeMillis)
+            gitHubLiveData.postValue(githubProjectUIState)
         }
 
+    }
+
+    sealed class GithubProjectUIState {
+        object Loading : GithubProjectUIState()
+        object Error : GithubProjectUIState()
+        data class Success(val projectList: List<GitHubProject>? = emptyList()) :
+            GithubProjectUIState()
     }
 }
