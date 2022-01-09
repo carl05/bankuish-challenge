@@ -2,6 +2,8 @@ package com.bankuish.challenge
 
 import com.bankuish.challenge.data.GitHubProjectRepository
 import com.bankuish.challenge.data.GitHubProjectResponse
+import com.bankuish.challenge.data.GitHubService
+import com.bankuish.challenge.data.IGitHubProjectRepository
 import com.bankuish.challenge.di.getServiceInstance
 import com.bankuish.challenge.domain.GitHubProjectUseCase
 import com.bankuish.challenge.presentation.GitHubProjectViewModel
@@ -29,19 +31,10 @@ import retrofit2.Response
 class GitHubProjectUseCaseTest : KoinTest {
     private val sampleModule = module {
         single { GitHubProjectUseCase(get()) }
-    }
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
-
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(mainThreadSurrogate)
+        single<IGitHubProjectRepository> { GitHubProjectRepository(get()) }
+        single { getServiceInstance() }
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.close()
-    }
 
     init {
         startKoin { modules(sampleModule) }
@@ -53,26 +46,29 @@ class GitHubProjectUseCaseTest : KoinTest {
 
     @Test
     fun `when get projects and have success response`() {
-
-        val respGit: GitHubProjectResponse = mock()
-        val resp: Response<GitHubProjectResponse> = Response.success(200, respGit)
-        Mockito.`when`(gitHubProjectRepository.getKotlinRepositories("", "", "")).thenReturn(
-            resp
-        )
-
-        val response = gitHubProjectUseCase.getKotlinProjects()
-        Mockito.verify(response.isSuccessful, Mockito.times(1))
+        runBlocking {
+            val respGit = GitHubProjectResponse()
+            val resp: Response<GitHubProjectResponse> = Response.success(200, respGit)
+            Mockito.`when`(gitHubProjectRepository.getKotlinRepositories("", "", "")).thenReturn(
+                resp
+            )
+            val response = gitHubProjectUseCase.getKotlinProjects()
+            assert(response.isSuccessful)
+            assert(response.code() == 200)
+        }
     }
 
     @Test
     fun `when get projects and have fail response`() {
-        val respGit: ResponseBody = mock()
-        val resp: Response<GitHubProjectResponse> = Response.error(500, respGit)
-        Mockito.`when`(gitHubProjectRepository.getKotlinRepositories("", "", "")).thenReturn(
-            resp
-        )
-
-        val response = gitHubProjectUseCase.getKotlinProjects()
-        Mockito.verify(!response.isSuccessful, Mockito.times(1))
+        runBlocking {
+            val respGit: ResponseBody = mock()
+            val resp: Response<GitHubProjectResponse> = Response.error(500, respGit)
+            Mockito.`when`(gitHubProjectRepository.getKotlinRepositories("", "", "")).thenReturn(
+                resp
+            )
+            val response = gitHubProjectUseCase.getKotlinProjects()
+            assert(!response.isSuccessful)
+            assert(response.code() == 500)
+        }
     }
 }
